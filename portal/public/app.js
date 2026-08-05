@@ -2,7 +2,6 @@
   'use strict';
 
   const $ = (id) => document.getElementById(id);
-  const loginView = $('login-view');
   const mainView = $('main-view');
   const consoleView = $('console-view');
   const consoleFrame = $('console-frame');
@@ -38,10 +37,8 @@
   }
 
   function showView(name) {
-    loginView.classList.add('hidden');
     mainView.classList.add('hidden');
     consoleView.classList.add('hidden');
-    if (name === 'login') loginView.classList.remove('hidden');
     if (name === 'main') mainView.classList.remove('hidden');
     if (name === 'console') consoleView.classList.remove('hidden');
   }
