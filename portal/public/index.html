@@ -4,15 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
   <meta name="theme-color" content="#0b0e14" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="GameBox" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
   <title>GameBox</title>
   <link rel="stylesheet" href="/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237b5cff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>G</text></svg>" />
 </head>
 <body>
   <div id="app">
-    <section id="main-view" class="main-view">
+
+    <section id="presentation-view" class="presentation-view hidden">
+      <div class="presentation">
+        <div class="presentation-logo">G</div>
+        <h1>GameBox</h1>
+        <p class="presentation-sub">Tu consola de juegos en la nube</p>
+        <div class="presentation-card">
+          <h2>Añade GameBox a tu pantalla de inicio</h2>
+          <p class="presentation-intro">Esta web funciona como una app. Para usarla, guárdala en la pantalla de inicio de tu dispositivo y ábrela desde ahí.</p>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <strong>iPhone / iPad</strong>
+                <span>Toca <b>Compartir</b> (icono cuadrado con ↑) → <b>Añadir a pantalla de inicio</b> → <b>Añadir</b>.</span>
+              </div>
+            </div>
+            <div class="step-divider">o</div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <strong>Android</strong>
+                <span>Toca el menú <b>⋮</b> → <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b> → <b>Instalar</b>.</span>
+              </div>
+            </div>
+          </div>
+          <p class="presentation-note">Después, abre GameBox desde su icono en la pantalla de inicio para jugar.</p>
+          <button id="btn-reinstall" class="btn primary block">Ya lo he añadido — Abrir GameBox</button>
+          <button id="btn-refresh" class="btn ghost block">Comprobar de nuevo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="main-view" class="main-view hidden">
       <header class="topbar">
         <div class="topbar-row">
           <div class="brand">GameBox</div>

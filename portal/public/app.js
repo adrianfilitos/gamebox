@@ -2,6 +2,7 @@
   'use strict';
 
   const $ = (id) => document.getElementById(id);
+  const presentationView = $('presentation-view');
   const mainView = $('main-view');
   const consoleView = $('console-view');
   const consoleFrame = $('console-frame');
@@ -10,6 +11,14 @@
   const toast = $('toast');
 
   let toastTimer = null;
+
+  function isStandalone() {
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
+      navigator.standalone === true
+    );
+  }
 
   function showToast(msg, type) {
     toast.textContent = msg;
@@ -37,8 +46,10 @@
   }
 
   function showView(name) {
+    presentationView.classList.add('hidden');
     mainView.classList.add('hidden');
     consoleView.classList.add('hidden');
+    if (name === 'presentation') presentationView.classList.remove('hidden');
     if (name === 'main') mainView.classList.remove('hidden');
     if (name === 'console') consoleView.classList.remove('hidden');
   }
@@ -108,24 +119,51 @@
   function openConsole() {
     showView('console');
     consoleFrame.src = '/ml/';
+    requestFullscreen();
   }
 
   function closeConsole() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
     consoleFrame.src = 'about:blank';
     showView('main');
     loadStatus();
     loadGames();
   }
 
-  function start() {
+  function requestFullscreen() {
+    try {
+      if (document.fullscreenEnabled && !document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    } catch (e) { /* noop */ }
+  }
+
+  function startMain() {
     showView('main');
     loadStatus();
     loadGames();
     setInterval(loadStatus, 20000);
   }
 
+  function startPresentation() {
+    showView('presentation');
+  }
+
+  function start() {
+    if (isStandalone()) startMain();
+    else startPresentation();
+  }
+
   $('btn-console').addEventListener('click', openConsole);
   $('btn-back').addEventListener('click', closeConsole);
+  $('btn-reinstall').addEventListener('click', () => { if (isStandalone()) startMain(); else location.reload(); });
+  $('btn-refresh').addEventListener('click', () => location.reload());
+
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
 
   start();
 })();

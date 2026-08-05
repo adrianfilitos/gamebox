@@ -196,6 +196,87 @@ code { background: var(--panel-2); padding: 2px 6px; border-radius: 6px; font-si
 .toast.error { border-left-color: var(--danger); }
 .toast.success { border-left-color: var(--accent); }
 
+/* ---------- Presentación (no instalado) ---------- */
+.presentation-view {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px calc(28px + env(safe-area-inset-bottom));
+}
+
+.presentation {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.presentation-logo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 14px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  font-size: 40px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 40px rgba(123, 92, 255, 0.35);
+}
+
+.presentation h1 {
+  font-size: 30px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--primary-2), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.presentation-sub { color: var(--muted); margin: 6px 0 26px; font-size: 15px; }
+
+.presentation-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  text-align: left;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.presentation-card h2 { font-size: 18px; margin-bottom: 10px; }
+.presentation-intro { color: var(--muted); font-size: 14px; line-height: 1.5; margin-bottom: 18px; }
+
+.steps { display: flex; flex-direction: column; gap: 16px; margin-bottom: 18px; }
+
+.step { display: flex; gap: 14px; align-items: flex-start; }
+.step-num {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-body { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.step-body strong { font-size: 14px; }
+.step-body span { color: var(--muted); line-height: 1.5; }
+.step-body b { color: var(--text); }
+
+.step-divider { text-align: center; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+.presentation-note { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+
+.presentation-card .btn { margin-top: 10px; }
+
 /* ---------- Móvil ---------- */
 @media (max-width: 640px) {
   .main-view { padding: 8px 12px calc(24px + env(safe-area-inset-bottom)); }
