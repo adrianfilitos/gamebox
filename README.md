@@ -1,5 +1,7 @@
 # GameBox — Cloud gaming personal
 
+> 🌐 **Web oficial / descarga**: https://adrianfilitos.github.io/gamebox/ · 💾 **Releases**: https://github.com/adrianfilitos/gamebox/releases
+
 Convierte un PC con Windows en una "consola remota": detecta automáticamente tus juegos de **Steam**, **Epic Games** y **Xbox / Tienda de Microsoft**, y te deja lanzarlos y transmitirlos desde el móvil, la tablet o cualquier PC, con mando o controles táctiles.
 
 ## Características (v2)
