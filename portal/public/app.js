@@ -48,9 +48,13 @@
       const s = await api('/api/status');
       setPill('pill-sunshine', s.sunshine && s.sunshine.up ? 'on' : 'off', 'Streaming ' + (s.sunshine && s.sunshine.up ? 'OK' : 'caído'));
       setPill('pill-moonlight', s.moonlight && s.moonlight.up ? 'on' : 'off', 'Consola ' + (s.moonlight && s.moonlight.up ? 'OK' : 'caída'));
-      setPill('pill-tailscale', s.tailscale && s.tailscale.ip ? 'on' : 'off', 'VPN ' + (s.tailscale && s.tailscale.ip ? s.tailscale.ip : 'desconectada'));
+      const ts = s.tailscale && s.tailscale.ip;
+      setPill('pill-tailscale', ts ? 'on' : 'off', 'VPN ' + (ts ? 'OK' : 'no'));
       setPill('pill-session', s.activeUser ? 'warn' : 'off', 'Sesión ' + (s.activeUser || 'ninguna'));
-      if (s.sunshine && s.sunshine.up) $('subtitle-line').textContent = s.sunshine.apps + ' aplicaciones de streaming detectadas.';
+      if (s.sunshine && s.sunshine.up) {
+        const base = s.sunshine.apps + ' aplicaciones de streaming detectadas.';
+        $('subtitle-line').textContent = ts ? base + ' VPN ' + s.tailscale.ip : base;
+      }
     } catch (e) {
       setPill('pill-sunshine', 'off', 'Streaming ?');
     }

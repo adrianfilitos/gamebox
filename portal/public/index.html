@@ -2,8 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
   <meta name="theme-color" content="#0b0e14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="GameBox" />
   <title>GameBox</title>
   <link rel="stylesheet" href="/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237b5cff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>G</text></svg>" />
@@ -12,15 +14,15 @@
   <div id="app">
     <section id="main-view" class="main-view">
       <header class="topbar">
-        <div class="brand">GameBox</div>
+        <div class="topbar-row">
+          <div class="brand">GameBox</div>
+          <button id="btn-console" class="btn accent">Consola</button>
+        </div>
         <div class="statusbar">
           <span class="pill" id="pill-sunshine"><i></i>Streaming</span>
           <span class="pill" id="pill-moonlight"><i></i>Consola</span>
           <span class="pill" id="pill-tailscale"><i></i>VPN</span>
           <span class="pill" id="pill-session"><i></i>Sesión</span>
-        </div>
-        <div class="topbar-actions">
-          <button id="btn-console" class="btn accent">Consola</button>
         </div>
       </header>
 
