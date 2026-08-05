@@ -39,7 +39,7 @@ Dispositivo ──HTTPS──▶ Portal GameBox (Node.js, puerto 4443)
 
 - **En casa**: `https://IP-DEL-PC:4443`
 - **Fuera de casa**: `https://IP-DE-TAILSCALE:4443` (necesita Tailscale)
-- Abre el portal (sin login), elige un juego en la biblioteca o entra en la **Consola** para transmitir.
+- Es una PWA: la URL del navegador solo muestra una **presentación** con las instrucciones para **añadir GameBox a la pantalla de inicio**. Se usa abriendo la app desde su icono (pantalla completa, sin navegador). El el icono, elige un juego en la biblioteca o entra en la **Consola** para transmitir.
 - El PC debe estar encendido y en la sesión de kiosko para jugar de forma aislada.
 - **Mandos**: el mando se conecta al dispositivo desde el que se ve la transmisión (Gamepad API del navegador). El host necesita el driver **ViGEmBus** instalado para que Sunshine inyecte el input en los juegos.
 
