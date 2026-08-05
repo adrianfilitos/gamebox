@@ -15,11 +15,11 @@ Dispositivo ──HTTPS──▶ Portal GameBox (Node.js, puerto 4443)
         (streaming)     (consola)      (configuración)
 ```
 
-- **Portal (launcher)** — Node.js + Express: login con contraseña, biblioteca de juegos, estado del sistema y una consola embebida para transmitir. Proxy HTTPS hacia Moonlight Web y hacia el panel de Sunshine.
+- **Portal (launcher)** — Node.js + Express: biblioteca de juegos, estado del sistema y una consola embebida para transmitir. **Sin autenticación** (acceso directo). Proxy HTTPS hacia Moonlight Web y hacia el panel de Sunshine.
 - **[Sunshine](https://github.com/LizardByte/Sunshine)** — servidor de streaming (H.264/HEVC por hardware). Se instala aparte.
 - **[Moonlight Web](https://github.com/MrCreativ3001/moonlight-web-stream)** — cliente de streaming en el navegador: mando (Gamepad API), táctil en móvil, teclado/ratón en escritorio. Se descarga como binario y se sirve tras el portal (SSO por cabecera).
 - **[Tailscale](https://tailscale.com)** — VPN privada opcional para jugar fuera de casa sin abrir puertos en el router.
-- **Kiosko** — cuenta de Windows estándar con shell de solo-launcher (`bin/GameBoxKiosk.cs`), auto-login y sin acceso al escritorio.
+- **Kiosko** — cuenta de Windows estándar con shell de solo-launcher (`bin/GameBoxKiosk.cs`), auto-login y sin acceso al escritorio. La pantalla del PC solo muestra un fondo estático; todo se lanza desde el móvil.
 
 ## Instalación
 

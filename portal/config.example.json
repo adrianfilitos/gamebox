@@ -6,9 +6,9 @@
     "password": "TU_PASSWORD_SUNSHINE"
   },
   "auth": {
-    "username": "admin",
-    "password": "TU_PASSWORD_PORTAL",
-    "sessionSecret": "GENERA_UNA_CADENA_ALEATORIA_LARGA"
+    "username": "opcional",
+    "password": "opcional",
+    "sessionSecret": "opcional"
   },
   "kiosk": {
     "username": "GameKiosk",

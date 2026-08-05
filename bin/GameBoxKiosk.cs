@@ -12,7 +12,6 @@ class GameBoxKiosk
         Form form = new Form();
         form.FormBorderStyle = FormBorderStyle.None;
         form.WindowState = FormWindowState.Maximized;
-        form.TopMost = true;
         form.StartPosition = FormStartPosition.Manual;
         form.ShowInTaskbar = false;
         form.BackColor = Color.FromArgb(8, 10, 15);

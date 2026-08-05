@@ -117,40 +117,11 @@
   }
 
   function start() {
-    api('/api/me')
-      .then(() => {
-        showView('main');
-        loadStatus();
-        loadGames();
-        setInterval(loadStatus, 20000);
-      })
-      .catch(() => showView('login'));
+    showView('main');
+    loadStatus();
+    loadGames();
+    setInterval(loadStatus, 20000);
   }
-
-  $('login-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    $('login-error').classList.add('hidden');
-    try {
-      await api('/api/login', {
-        method: 'POST',
-        body: JSON.stringify({ username: $('login-user').value, password: $('login-pass').value }),
-      });
-      $('login-user').value = '';
-      $('login-pass').value = '';
-      showView('main');
-      loadStatus();
-      loadGames();
-      setInterval(loadStatus, 20000);
-    } catch (err) {
-      $('login-error').textContent = err.message;
-      $('login-error').classList.remove('hidden');
-    }
-  });
-
-  $('btn-logout').addEventListener('click', async () => {
-    await api('/api/logout', { method: 'POST' }).catch(() => {});
-    showView('login');
-  });
 
   $('btn-console').addEventListener('click', openConsole);
   $('btn-back').addEventListener('click', closeConsole);

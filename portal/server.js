@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const https = require('https');
 const express = require('express');
 const httpProxy = require('http-proxy');
@@ -9,81 +8,15 @@ const CONFIG = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), '
 const PORT = CONFIG.moonlight.port || 4443;
 const ML_TARGET = CONFIG.moonlight.target;
 const ML_PREFIX = CONFIG.moonlight.pathPrefix || '/ml';
-const AUTH = CONFIG.auth;
 const SUNSHINE = CONFIG.sunshine;
 
 const app = express();
 app.use(express.json());
 
-function sign(data) {
-  return crypto.createHmac('sha256', AUTH.sessionSecret).update(data).digest('base64url');
-}
+const ML_USER = 'admin';
 
-function makeToken(username) {
-  const payload = Buffer.from(JSON.stringify({ u: username, exp: Date.now() + 7 * 24 * 3600 * 1000 })).toString('base64url');
-  return payload + '.' + sign(payload);
-}
-
-function verifyToken(token) {
-  if (!token) return null;
-  const i = token.lastIndexOf('.');
-  if (i < 0) return null;
-  const payload = token.slice(0, i);
-  const sig = token.slice(i + 1);
-  const expected = sign(payload);
-  const a = Buffer.from(sig);
-  const b = Buffer.from(expected);
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
-  try {
-    const data = JSON.parse(Buffer.from(payload, 'base64url').toString());
-    if (data.exp < Date.now()) return null;
-    return data.u;
-  } catch {
-    return null;
-  }
-}
-
-function parseCookies(header) {
-  const out = {};
-  if (!header) return out;
-  for (const part of header.split(';')) {
-    const idx = part.indexOf('=');
-    if (idx > 0) out[part.slice(0, idx).trim()] = part.slice(idx + 1).trim();
-  }
-  return out;
-}
-
-function currentUser(req) {
-  return verifyToken(parseCookies(req.headers.cookie || '')['gb_session']);
-}
-
-function requireAuth(req, res, next) {
-  if (!currentUser(req)) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-  next();
-}
-
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body || {};
-  if (!username || !password) return res.status(400).json({ error: 'Faltan credenciales' });
-  const okUser = crypto.timingSafeEqual(Buffer.from(username), Buffer.from(AUTH.username));
-  const okPass = crypto.timingSafeEqual(Buffer.from(password), Buffer.from(AUTH.password));
-  if (!okUser || !okPass) {
-    return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
-  }
-  const token = makeToken(username);
-  res.setHeader('Set-Cookie', `gb_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${7 * 24 * 3600}`);
-  res.json({ ok: true, user: username });
-});
-
-app.post('/api/logout', (req, res) => {
-  res.setHeader('Set-Cookie', 'gb_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0');
-  res.json({ ok: true });
-});
-
-app.get('/api/me', requireAuth, (req, res) => {
-  res.json({ user: currentUser(req) });
+app.get('/api/me', (req, res) => {
+  res.json({ user: ML_USER });
 });
 
 function sunshineRequest(pathname, { method = 'GET' } = {}) {
@@ -116,14 +49,24 @@ async function sunshineAppList() {
 }
 
 function activeInteractiveUser() {
+  const { execSync } = require('child_process');
   try {
-    const out = require('child_process').execSync('query user', { encoding: 'utf8', shell: 'cmd.exe' });
-    const lines = out.split(/\r?\n/).filter((l) => l.trim());
+    const out = execSync('powershell -NoProfile -NonInteractive -Command "(Get-CimInstance Win32_ComputerSystem).UserName"', { encoding: 'utf8' });
+    const name = out.trim();
+    if (name && name.includes('\\')) {
+      const u = name.split('\\').pop();
+      if (u && u.toUpperCase() !== 'SYSTEM') return [u];
+    }
+  } catch {}
+  try {
+    const out = execSync('query user', { encoding: 'utf8', shell: 'cmd.exe' });
     const users = [];
-    for (const line of lines) {
-      if (!line.trim()) continue;
-      const m = line.trim().split(/\s{2,}/);
-      if (m.length >= 2 && m[0] !== 'USERNAME' && m[0] !== 'Nombre') users.push(m[0]);
+    for (const line of out.split(/\r?\n/)) {
+      const t = line.trim();
+      if (!t) continue;
+      if (/NOMBRE|USERNAME|Nombre|SESI|ID\./i.test(t)) continue;
+      const m = t.replace(/^>/, '').trim().split(/\s{2,}/);
+      if (m.length && m[0]) users.push(m[0]);
     }
     return users;
   } catch {
@@ -136,7 +79,7 @@ function launchInSession(launchCmd) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'launch-request.txt'), launchCmd, 'utf8');
   const users = activeInteractiveUser();
-  if (!users.length) return { ok: false, error: 'No hay una sesión interactiva activa (nadie logueado en el equipo).' };
+  if (!users.length) return { ok: false, error: 'No hay una sesiÃ³n interactiva activa (nadie logueado en el equipo).' };
   const { execSync } = require('child_process');
   const results = [];
   for (const u of users) {
@@ -145,13 +88,13 @@ function launchInSession(launchCmd) {
       execSync(`schtasks /run /tn "${task}"`, { encoding: 'utf8' });
       results.push(`tarea ${task} lanzada`);
     } catch (e) {
-      results.push(`tarea ${task} falló: ${String(e.message).split(/\r?\n/)[0]}`);
+      results.push(`tarea ${task} fallÃ³: ${String(e.message).split(/\r?\n/)[0]}`);
     }
   }
   return { ok: true, detail: results.join('; ') };
 }
 
-app.get('/api/games', requireAuth, async (req, res) => {
+app.get('/api/games', async (req, res) => {
   try {
     const gamesPath = path.join(__dirname, 'games.json');
     const games = fs.existsSync(gamesPath) ? JSON.parse(fs.readFileSync(gamesPath, 'utf8')) : [];
@@ -161,7 +104,7 @@ app.get('/api/games', requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/play/:id', requireAuth, async (req, res) => {
+app.post('/api/play/:id', async (req, res) => {
   try {
     const gamesPath = path.join(__dirname, 'games.json');
     const games = fs.existsSync(gamesPath) ? JSON.parse(fs.readFileSync(gamesPath, 'utf8')) : [];
@@ -175,7 +118,7 @@ app.post('/api/play/:id', requireAuth, async (req, res) => {
   }
 });
 
-app.get('/api/status', requireAuth, async (req, res) => {
+app.get('/api/status', async (req, res) => {
   const status = {
     portal: { up: true, port: PORT },
     sunshine: { up: false, apps: 0 },
@@ -204,16 +147,8 @@ app.get('/api/status', requireAuth, async (req, res) => {
     status.tailscale.ip = null;
   }
   try {
-    const { execSync } = require('child_process');
-    const out = execSync('query user', { encoding: 'utf8', shell: 'cmd.exe' });
-    const lines = out.split(/\r?\n/).filter((l) => l.trim());
-    for (const line of lines) {
-      const m = line.trim().split(/\s{2,}/);
-      if (m.length >= 2 && m[0] !== 'USERNAME' && m[0] !== 'Nombre') {
-        status.activeUser = m[0];
-        break;
-      }
-    }
+    const users = activeInteractiveUser();
+    status.activeUser = users[0] || null;
   } catch {}
   res.json(status);
 });
@@ -226,8 +161,8 @@ proxy.on('error', (err, req, res) => {
   }
 });
 
-app.use(ML_PREFIX, requireAuth, (req, res) => {
-  req.headers['x-forwarded-user'] = currentUser(req);
+app.use(ML_PREFIX, (req, res) => {
+  req.headers['x-forwarded-user'] = ML_USER;
   req.headers['x-forwarded-proto'] = 'https';
   delete req.headers['x-forwarded-for'];
   req.url = req.originalUrl;
@@ -241,7 +176,7 @@ sunshineProxy.on('error', (err, req, res) => {
   }
 });
 
-app.use('/sunshine', requireAuth, (req, res) => {
+app.use('/sunshine', (req, res) => {
   const basic = 'Basic ' + Buffer.from(`${SUNSHINE.username}:${SUNSHINE.password}`).toString('base64');
   req.headers.authorization = basic;
   req.headers['x-forwarded-proto'] = 'https';
@@ -261,13 +196,7 @@ httpsServer.on('upgrade', (req, socket, head) => {
     socket.destroy();
     return;
   }
-  const user = verifyToken(parseCookies(req.headers.cookie || '')['gb_session']);
-  if (!user) {
-    socket.write('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n');
-    socket.destroy();
-    return;
-  }
-  req.headers['x-forwarded-user'] = user;
+  req.headers['x-forwarded-user'] = ML_USER;
   req.headers['x-forwarded-proto'] = 'https';
   delete req.headers['x-forwarded-for'];
   proxy.ws(req, socket, head);
