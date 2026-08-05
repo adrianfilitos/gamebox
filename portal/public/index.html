@@ -17,6 +17,7 @@
 <body>
   <div id="app">
 
+    <!-- Presentación (cuando no se ha añadido a la pantalla de inicio) -->
     <section id="presentation-view" class="presentation-view hidden">
       <div class="presentation">
         <div class="presentation-logo">G</div>
@@ -49,44 +50,180 @@
       </div>
     </section>
 
-    <section id="main-view" class="main-view hidden">
+    <!-- App -->
+    <div id="app-view" class="app-view hidden">
       <header class="topbar">
         <div class="topbar-row">
           <div class="brand">GameBox</div>
-          <button id="btn-console" class="btn accent">Consola</button>
-        </div>
-        <div class="statusbar">
-          <span class="pill" id="pill-sunshine"><i></i>Streaming</span>
-          <span class="pill" id="pill-moonlight"><i></i>Consola</span>
-          <span class="pill" id="pill-tailscale"><i></i>VPN</span>
-          <span class="pill" id="pill-session"><i></i>Sesión</span>
+          <div class="statusbar">
+            <span class="pill" id="pill-sunshine"><i></i>Streaming</span>
+            <span class="pill" id="pill-moonlight"><i></i>Consola</span>
+            <span class="pill" id="pill-session"><i></i>Sesión</span>
+          </div>
         </div>
       </header>
 
-      <main>
-        <div class="hero">
-          <h1>Tu biblioteca</h1>
-          <p id="subtitle-line">Selecciona un juego para lanzarlo, o abre la consola para transmitir.</p>
-        </div>
-        <div id="games-grid" class="games-grid"></div>
-        <div id="empty-state" class="empty hidden">
-          <p>No se han detectado juegos todavía.</p>
-          <p class="muted">Instala Steam/Epic/Xbox o añade juegos en <code>C:\GameBox\portal\games.json</code>.</p>
-        </div>
-      </main>
-    </section>
+      <main id="view-container">
+        <!-- Biblioteca -->
+        <section id="view-library" class="view">
+          <div class="view-head">
+            <h2>Biblioteca</h2>
+            <button id="btn-rescan" class="btn ghost small">Reescanear</button>
+          </div>
+          <div class="toolbar">
+            <div class="search-wrap">
+              <input id="search-input" class="search" type="search" placeholder="Buscar juegos..." autocomplete="off" />
+            </div>
+            <div id="category-chips" class="chips"></div>
+          </div>
+          <div id="games-grid" class="games-grid"></div>
+          <div id="empty-state" class="empty hidden">
+            <p>No se encontraron juegos.</p>
+            <p class="muted">Pulsa <b>Reescanear</b> para detectar juegos de Steam, Epic y Xbox automáticamente, o añádelos en <code>games.json</code>.</p>
+          </div>
+        </section>
 
-    <section id="console-view" class="console-view hidden">
-      <div class="console-bar">
-        <button id="btn-back" class="btn ghost">&larr; Biblioteca</button>
-        <span class="console-title">Consola de streaming</span>
-        <span class="hint">Mando: conéctalo por Bluetooth/USB al dispositivo. Necesitas HTTPS para el mando.</span>
-      </div>
-      <iframe id="console-frame" src="/ml/" title="GameBox Consola" allow="fullscreen; gamepad; keyboard-lock; autoplay; clipboard-write"></iframe>
-    </section>
+        <!-- Consola -->
+        <section id="view-console" class="view hidden">
+          <div class="console-bar">
+            <button id="btn-back" class="btn ghost small">&larr; Biblioteca</button>
+            <span class="console-title">Consola de streaming</span>
+          </div>
+          <div id="console-unavailable" class="console-empty hidden">
+            <p>La consola de streaming (Moonlight Web) no está configurada en este equipo.</p>
+          </div>
+          <iframe id="console-frame" src="about:blank" title="GameBox Consola" allow="fullscreen; gamepad; keyboard-lock; autoplay; clipboard-write"></iframe>
+        </section>
+
+        <!-- Estadísticas -->
+        <section id="view-stats" class="view hidden">
+          <div class="view-head"><h2>Estadísticas</h2></div>
+          <div id="stats-cards" class="stats-cards"></div>
+          <h3 class="section-title">Más jugados</h3>
+          <div id="stats-top" class="list-card"></div>
+          <h3 class="section-title">Recientes</h3>
+          <div id="stats-recent" class="list-card"></div>
+        </section>
+
+        <!-- Ajustes -->
+        <section id="view-settings" class="view hidden">
+          <div class="view-head"><h2>Ajustes</h2></div>
+          <div class="panel">
+            <h3>Rápidos</h3>
+            <label class="row">
+              <span>Modo de lanzamiento</span>
+              <select id="set-launchmode">
+                <option value="user">Usuario (directo)</option>
+                <option value="system">Sistema (kiosko)</option>
+              </select>
+            </label>
+            <label class="row">
+              <span>Iniciar con Windows</span>
+              <input id="set-autostart" type="checkbox" />
+            </label>
+            <label class="row">
+              <span>Comprobar actualizaciones</span>
+              <input id="set-checkupdates" type="checkbox" />
+            </label>
+            <label class="row">
+              <span>Escanear juegos al iniciar</span>
+              <input id="set-scanonstart" type="checkbox" />
+            </label>
+            <label class="row">
+              <span>URL de actualizaciones</span>
+              <input id="set-updatemanifest" type="text" placeholder="https://…/update.json" />
+            </label>
+            <button id="btn-save-settings" class="btn primary block">Guardar ajustes</button>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Dependencias</h3>
+              <button id="btn-recheck-deps" class="btn ghost small">Comprobar de nuevo</button>
+            </div>
+            <div id="deps-list" class="deps-list"></div>
+          </div>
+          <div class="panel">
+            <h3>Biblioteca</h3>
+            <button id="btn-restore-hidden" class="btn ghost block">Restaurar juegos ocultos</button>
+          </div>
+        </section>
+
+        <!-- Sistema -->
+        <section id="view-system" class="view hidden">
+          <div class="view-head"><h2>Sistema</h2></div>
+          <div class="sys-tabs">
+            <button data-sys="procs" class="sys-tab active">Procesos</button>
+            <button data-sys="logs" class="sys-tab">Registros</button>
+            <button data-sys="update" class="sys-tab">Actualización</button>
+            <button data-sys="config" class="sys-tab">Config</button>
+          </div>
+
+          <div id="sys-procs" class="sys-pane">
+            <div class="panel-head">
+              <h3>Procesos</h3>
+              <button id="btn-refresh-procs" class="btn ghost small">Actualizar</button>
+            </div>
+            <div id="procs-list" class="procs-list"></div>
+          </div>
+
+          <div id="sys-logs" class="sys-pane hidden">
+            <div class="panel-head">
+              <h3>Registros</h3>
+              <div class="log-controls">
+                <input id="log-filter" type="text" placeholder="Filtrar..." />
+                <button id="btn-refresh-logs" class="btn ghost small">Actualizar</button>
+              </div>
+            </div>
+            <div id="logs-view" class="logs-view"></div>
+          </div>
+
+          <div id="sys-update" class="sys-pane hidden">
+            <div class="panel">
+              <p>Versión actual: <b id="upd-current">…</b></p>
+              <div id="upd-result" class="muted"></div>
+              <button id="btn-check-update" class="btn primary">Comprobar actualización</button>
+              <button id="btn-apply-update" class="btn accent hidden">Descargar e instalar</button>
+            </div>
+          </div>
+
+          <div id="sys-config" class="sys-pane hidden">
+            <div class="panel-head">
+              <h3>Archivo de configuración</h3>
+              <button id="btn-refresh-config" class="btn ghost small">Actualizar</button>
+            </div>
+            <pre id="config-view" class="config-view"></pre>
+          </div>
+        </section>
+      </main>
+
+      <nav class="tabbar">
+        <button data-view="library" class="tab active">Biblioteca</button>
+        <button data-view="console" class="tab">Consola</button>
+        <button data-view="stats" class="tab">Estadísticas</button>
+        <button data-view="settings" class="tab">Ajustes</button>
+        <button data-view="system" class="tab">Sistema</button>
+      </nav>
+    </div>
   </div>
 
   <div id="toast" class="toast hidden"></div>
+
+  <!-- Asistente de configuración (primer arranque) -->
+  <div id="wizard" class="wizard hidden">
+    <div class="wizard-card">
+      <div class="wizard-head">
+        <div class="wizard-logo">G</div>
+        <h2>Configuración de GameBox</h2>
+        <p class="muted">Un par de pasos y listo.</p>
+      </div>
+      <div id="wizard-body" class="wizard-body"></div>
+      <div class="wizard-actions">
+        <button id="btn-wizard-next" class="btn primary block hidden">Continuar</button>
+        <button id="btn-wizard-finish" class="btn accent block hidden">Terminar</button>
+      </div>
+    </div>
+  </div>
+
   <script src="/app.js"></script>
 </body>
 </html>

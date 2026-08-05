@@ -3,19 +3,28 @@ node_modules/
 
 # Configuración sensible (nunca subir)
 portal/config.json
+setup/package.zip
 
 # Certificados y claves
 certs/
 *.pem
+*.pfx
 
 # Logs y estado
 *.log
-portal-launch/launch-request.txt
-moonlight-web-deploy/package/server/data.json
+logs/
+stats.json
+data/
+covers/
+launch/
+portal-launch/
 
-# Binarios de terceros / despliegue
+# Despliegue / binarios
 moonlight-web-deploy/
+dist/
+setup/bin/
+setup/obj/
 
 # Binarios locales compilados
 bin/GameBoxKiosk.exe
-`n# Fondo generado del kiosko`nbin/background.png
+bin/background.png

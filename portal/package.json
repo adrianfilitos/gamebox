@@ -1,8 +1,8 @@
 {
   "name": "gamebox-portal",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Portal de cloud gaming personal (launcher + streaming)",
+  "description": "GameBox - consola de juegos en la nube (launcher + streaming + biblioteca)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
