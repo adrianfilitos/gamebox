@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GameBox — Tu consola de juegos en la nube</title>
+<meta name="description" content="GameBox: detecta y lanza tus juegos de PC desde el móvil. Steam, Epic Games y Xbox. Gratis, en tu propio equipo." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237b5cff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>G</text></svg>" />
+<style>
+:root{
+  --bg:#0b0e14; --panel:#131824; --panel2:#1a2130; --border:#232c3d;
+  --text:#e6e9f0; --muted:#8b94a7; --primary:#7b5cff; --primary2:#9d7dff; --accent:#22d3a5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:12px;
+  font-size:15px;font-weight:700;padding:14px 22px;transition:transform .08s,filter .15s,background .15s;
+}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn.ghost{background:var(--panel2);border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{background:#222c40}
+.btn.small{padding:10px 16px;font-size:14px}
+
+header.site{
+  position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav{display:flex;align-items:center;gap:18px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;margin-right:auto}
+.logo .g{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.nav a{color:var(--muted);font-size:14px;font-weight:600}
+.nav a:hover{color:var(--text)}
+.nav .btn{margin-left:4px}
+
+.hero{position:relative;padding:90px 0 60px;text-align:center;overflow:hidden}
+.hero::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(700px 380px at 20% -10%,rgba(123,92,255,.35),transparent 60%),
+             radial-gradient(700px 380px at 90% 0%,rgba(34,211,165,.22),transparent 60%);
+}
+.hero .tag{display:inline-block;background:rgba(34,211,165,.12);color:var(--accent);border:1px solid rgba(34,211,165,.3);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;margin-bottom:22px}
+.hero h1{font-size:clamp(34px,6vw,58px);letter-spacing:-1px;line-height:1.08;font-weight:800;max-width:820px;margin:0 auto}
+.hero h1 .grad{background:linear-gradient(90deg,var(--primary2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{color:var(--muted);font-size:18px;max-width:640px;margin:20px auto 32px}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.hero .meta{color:var(--muted);font-size:13px}
+.hero .meta b{color:var(--text)}
+
+.stores{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:34px 0 0}
+.store{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:14px;font-weight:700}
+
+/* Mockup */
+.mock{max-width:320px;margin:46px auto 0}
+.phone{
+  background:var(--panel);border:1px solid var(--border);border-radius:34px;padding:12px;
+  box-shadow:0 40px 90px rgba(0,0,0,.6);transform:rotate(-3deg);
+}
+.phone .screen{background:var(--bg);border-radius:24px;overflow:hidden;padding:16px}
+.phone .bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.phone .bar b{font-size:14px}
+.phone .bar .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.phone .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.phone .tile{border-radius:14px;padding:14px 12px;color:#fff;font-weight:800;font-size:15px;display:flex;flex-direction:column;justify-content:space-between;min-height:96px}
+.phone .tile span{font-size:10px;font-weight:600;opacity:.85}
+.phone .tab{display:flex;justify-content:space-around;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.phone .tab span{font-size:11px;color:var(--muted);font-weight:600}
+.phone .tab span.on{color:var(--text)}
+
+section{padding:60px 0}
+.sec-title{text-align:center;font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-.5px;margin-bottom:12px}
+.sec-sub{text-align:center;color:var(--muted);max-width:620px;margin:0 auto 40px}
+
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px;transition:transform .12s,border-color .15s}
+.card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.card .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;background:linear-gradient(135deg,rgba(123,92,255,.25),rgba(34,211,165,.18))}
+.card h3{font-size:16px;margin-bottom:6px}
+.card p{font-size:14px;color:var(--muted)}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.step{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative}
+.step .n{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.step h3{font-size:16px;margin-bottom:6px}
+.step p{font-size:14px;color:var(--muted)}
+.step code{background:var(--panel2);padding:2px 8px;border-radius:6px;font-size:12px;color:var(--primary2)}
+
+.req{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.req .card p a{color:var(--primary2);font-weight:600}
+
+.faq{max-width:760px;margin:0 auto}
+.faq details{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:700;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq summary::after{content:'+';color:var(--accent);font-size:20px;font-weight:800}
+.faq details[open] summary::after{content:'–'}
+.faq p{margin-top:10px;color:var(--muted);font-size:14px}
+
+.cta-band{text-align:center;padding:70px 0;background:radial-gradient(700px 300px at 50% 0%,rgba(123,92,255,.28),transparent 70%)}
+.cta-band h2{font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:14px}
+.cta-band p{color:var(--muted);margin-bottom:26px}
+
+footer.site{border-top:1px solid var(--border);padding:36px 0;color:var(--muted);font-size:13px;text-align:center}
+footer.site .links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+footer.site a{color:var(--muted);font-weight:600}
+footer.site a:hover{color:var(--text)}
+
+@media(max-width:640px){
+  .nav a:not(.btn){display:none}
+  .hero{padding:60px 0 40px}
+  .btn{width:100%;justify-content:center}
+  .hero .cta{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container nav">
+    <div class="logo"><span class="g">G</span> GameBox</div>
+    <a href="#features">Características</a>
+    <a href="#instalacion">Instalación</a>
+    <a href="#requisitos">Requisitos</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn primary small" href="https://github.com/adrianfilitos/gamebox/releases/latest/download/GameBoxSetup.exe">Descargar</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="tag">Gratis · En tu propio PC · Sin suscripción</span>
+    <h1>Tus juegos de PC, en el móvil.<br /><span class="grad">Como una consola.</span></h1>
+    <p class="lead">GameBox detecta tus juegos de Steam, Epic Games y Xbox, y te deja lanzarlos y transmitirlos desde cualquier dispositivo con un toque.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/adrianfilitos/gamebox/releases/latest/download/GameBoxSetup.exe">⬇ Descargar GameBoxSetup.exe</a>
+      <a class="btn ghost" href="https://github.com/adrianfilitos/gamebox" target="_blank" rel="noopener">Ver código en GitHub</a>
+    </div>
+    <p class="meta">Windows 10/11 · <b>2.0</b> · Instalador de un solo archivo, sin instalación de Node</p>
+
+    <div class="mock">
+      <div class="phone">
+        <div class="screen">
+          <div class="bar"><b>GameBox</b><span class="dot"></span></div>
+          <div class="grid">
+            <div class="tile" style="background:linear-gradient(135deg,#7b5cff,#22d3a5)">Rocket League<span>Epic Games</span></div>
+            <div class="tile" style="background:linear-gradient(135deg,#f4535a,#f5b942)">Minecraft<span>Otros</span></div>
+            <div class="tile" style="background:linear-gradient(135deg,#22a3d3,#7b5cff)">Steam<span>Biblioteca</span></div>
+            <div class="tile" style="background:linear-gradient(135deg,#2da44e,#22a3d3)">Xbox<span>Tienda</span></div>
+          </div>
+          <div class="tab"><span class="on">Biblioteca</span><span>Consola</span><span>Stats</span><span>Ajustes</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stores">
+      <span class="store">🎮 Steam</span>
+      <span class="store">⚡ Epic Games</span>
+      <span class="store">🕹 Xbox / Tienda</span>
+      <span class="store">🪟 Windows 10/11</span>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <h2 class="sec-title">Todo lo que necesita un juego en la nube</h2>
+    <p class="sec-sub">Instalador, detección automática, estadísticas y actualizaciones. En un solo paquete.</p>
+    <div class="features">
+      <div class="card"><div class="ic">📦</div><h3>Instalador único</h3><p>Un solo .exe con todo incluido (Node.js portable embebido). Instalación guiada o silenciosa, sin administrador.</p></div>
+      <div class="card"><div class="ic">🔍</div><h3>Detección automática</h3><p>Encuentra tus juegos de Steam, Epic Games y Xbox/Tienda al instante, con portadas.</p></div>
+      <div class="card"><div class="ic">📚</div><h3>Biblioteca con búsqueda</h3><p>Búsqueda, categorías, favoritos y portadas. Ordena y oculta lo que no usas.</p></div>
+      <div class="card"><div class="ic">📊</div><h3>Estadísticas</h3><p>Tiempo jugado, lanzamientos, más jugados y recientes.</p></div>
+      <div class="card"><div class="ic">📺</div><h3>Streaming</h3><p>Transmite tu escritorio y juegos (integración con Sunshine + Moonlight Web).</p></div>
+      <div class="card"><div class="ic">🎮</div><h3>Mando y táctil</h3><p>Usa el mando conectado a tu dispositivo o los controles táctiles del móvil.</p></div>
+      <div class="card"><div class="ic">🔄</div><h3>Actualizaciones automáticas</h3><p>Comprueba e instala nuevas versiones desde la propia app, conservando tus datos.</p></div>
+      <div class="card"><div class="ic">🛠</div><h3>Gestión de procesos</h3><p>Ve qué juegos están abiertos y ciérralos sin tocar el PC.</p></div>
+      <div class="card"><div class="ic">📋</div><h3>Registros y errores</h3><p>Logs en tiempo real y supervisión de errores para resolver incidencias.</p></div>
+      <div class="card"><div class="ic">⚙️</div><h3>Ajustes rápidos</h3><p>Inicio con Windows, modo de lanzamiento, escaneo automático y más.</p></div>
+      <div class="card"><div class="ic">📱</div><h3>PWA a pantalla completa</h3><p>Se usa como una app desde la pantalla de inicio, sin barra de navegador.</p></div>
+      <div class="card"><div class="ic">🔒</div><h3>Local y privado</h3><p>Tus juegos y datos se quedan en tu equipo. Sin cuentas, sin nube de terceros.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="instalacion" style="background:rgba(19,24,36,.4)">
+  <div class="container">
+    <h2 class="sec-title">Instalación en 3 pasos</h2>
+    <p class="sec-sub">De la descarga a jugar, en menos de un minuto.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Descarga e instala</h3><p>Ejecuta <code>GameBoxSetup.exe</code> en tu PC con Windows. Se instala en <code>%LocalAppData%\GameBox</code>.</p></div>
+      <div class="step"><div class="n">2</div><h3>Añade a tu pantalla de inicio</h3><p>Abre <code>https://tu-PC:4443</code>, pulsa <b>Compartir → Añadir a pantalla de inicio</b> (iPhone) o <b>⋮ → Instalar app</b> (Android).</p></div>
+      <div class="step"><div class="n">3</div><h3>Juega</h3><p>La app detecta tus juegos automáticamente. Pulsa <b>Jugar</b> y listo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="requisitos">
+  <div class="container">
+    <h2 class="sec-title">Requisitos</h2>
+    <p class="sec-sub">El PC donde instalas GameBox.</p>
+    <div class="req">
+      <div class="card"><h3>🪟 Windows 10/11 (64 bits)</h3><p>No necesita permisos de administrador.</p></div>
+      <div class="card"><h3>🖥 Hardware</h3><p>Para transmitir a pantalla completa se recomienda una GPU con codificación de vídeo por hardware (Intel Quick Sync, NVIDIA NVENC o AMD).</p></div>
+      <div class="card"><h3>🎮 Mandos</h3><p>Opcional: driver <b>ViGEmBus</b> para mandos virtuales y <a href="https://github.com/LizardByte/Sunshine" target="_blank" rel="noopener">Sunshine</a> para streaming.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <h2 class="sec-title">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Es gratis?</summary><p>Sí, 100% gratuito y de código abierto. Tú instalas todo en tu propio equipo; no hay servidores de pago ni suscripciones.</p></details>
+      <details><summary>¿Necesito instalar Node.js?</summary><p>No. El instalador incluye un Node.js portable dentro del propio GameBox.</p></details>
+      <details><summary>¿Puedo jugar fuera de casa?</summary><p>Sí. Conecta una VPN privada como <a href="https://tailscale.com" target="_blank" rel="noopener">Tailscale</a> en tu PC y en tu dispositivo para acceder desde cualquier sitio sin abrir puertos.</p></details>
+      <details><summary>¿Mis juegos corren en el PC o en el móvil?</summary><p>Los juegos corren en tu PC. El móvil los transmite en directo (streaming) y sirve de mando.</p></details>
+      <details><summary>¿Por qué solo puedo usar la app desde la pantalla de inicio?</summary><p>GameBox es una PWA: funciona mejor a pantalla completa y sin la barra del navegador. En el navegador se muestra la presentación con los pasos para instalarla.</p></details>
+      <details><summary>¿Funciona con Steam, Epic y Xbox?</summary><p>GameBox detecta juegos de Steam, Epic Games y la Tienda de Microsoft/Xbox automáticamente y los lanza con su propio lanzador.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>¿Listo para jugar?</h2>
+    <p>Descarga GameBoxSetup.exe y convierte tu PC en tu consola personal.</p>
+    <div class="cta" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn primary" href="https://github.com/adrianfilitos/gamebox/releases/latest/download/GameBoxSetup.exe">⬇ Descargar GameBoxSetup.exe</a>
+      <a class="btn ghost" href="https://github.com/adrianfilitos/gamebox/releases" target="_blank" rel="noopener">Ver todos los releases</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="container">
+    <div class="links">
+      <a href="https://github.com/adrianfilitos/gamebox" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/adrianfilitos/gamebox/releases" target="_blank" rel="noopener">Releases</a>
+      <a href="https://github.com/adrianfilitos/gamebox/issues" target="_blank" rel="noopener">Incidencias</a>
+    </div>
+    <p>GameBox 2.0 · Proyecto de código abierto · Hecho con 🎮</p>
+  </div>
+</footer>
+
+</body>
+</html>
