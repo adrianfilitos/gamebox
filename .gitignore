@@ -18,3 +18,4 @@ moonlight-web-deploy/
 
 # Binarios locales compilados
 bin/GameBoxKiosk.exe
+`n# Fondo generado del kiosko`nbin/background.png

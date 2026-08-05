@@ -1,30 +1,27 @@
 using System;
-using System.Diagnostics;
-using System.Threading;
+using System.Drawing;
+using System.Windows.Forms;
 using System.IO;
 
 class GameBoxKiosk
 {
+    [STAThread]
     static void Main()
     {
-        string chrome = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
-        string args = "--app=https://localhost:4443 --ignore-certificate-errors --start-maximized --no-first-run --no-default-browser-check --kiosk";
-        string log = @"C:\GameBox\bin\kiosk.log";
-        while (true)
+        Application.EnableVisualStyles();
+        Form form = new Form();
+        form.FormBorderStyle = FormBorderStyle.None;
+        form.WindowState = FormWindowState.Maximized;
+        form.TopMost = true;
+        form.StartPosition = FormStartPosition.Manual;
+        form.ShowInTaskbar = false;
+        form.BackColor = Color.FromArgb(8, 10, 15);
+        string img = @"C:\GameBox\bin\background.png";
+        if (File.Exists(img))
         {
-            try
-            {
-                if (Process.GetProcessesByName("chrome").Length == 0)
-                {
-                    Process.Start(chrome, args);
-                }
-                Thread.Sleep(2000);
-            }
-            catch (Exception e)
-            {
-                try { File.AppendAllText(log, DateTime.Now.ToString("s") + " " + e.Message + "\r\n"); } catch { }
-                Thread.Sleep(3000);
-            }
+            try { form.BackgroundImage = Image.FromFile(img); form.BackgroundImageLayout = ImageLayout.Stretch; }
+            catch { }
         }
+        Application.Run(form);
     }
 }
