@@ -4,7 +4,70 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>GameBox — Tu consola de juegos en la nube</title>
-<meta name="description" content="GameBox: detecta y lanza tus juegos de PC desde el móvil. Steam, Epic Games y Xbox. Gratis, en tu propio equipo." />
+<meta name="description" content="GameBox: detecta y lanza tus juegos de PC desde el móvil. Steam, Epic Games y Xbox. Gratis, de código abierto, en tu propio equipo." />
+<meta name="keywords" content="GameBox, cloud gaming, streaming de juegos, juegos en la nube, Steam, Epic Games, Xbox, lanzador de juegos, game launcher, PWA, Windows" />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="adrianfilitos" />
+<meta name="theme-color" content="#0b0e14" />
+<link rel="canonical" href="https://adrianfilitos.github.io/gamebox/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="GameBox" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:title" content="GameBox — Tu consola de juegos en la nube" />
+<meta property="og:description" content="Detecta y lanza tus juegos de Steam, Epic Games y Xbox desde el móvil. Gratis y en tu propio equipo." />
+<meta property="og:url" content="https://adrianfilitos.github.io/gamebox/" />
+<meta property="og:image" content="https://adrianfilitos.github.io/gamebox/icon-512.png" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="GameBox — Tu consola de juegos en la nube" />
+<meta name="twitter:description" content="Detecta y lanza tus juegos de Steam, Epic Games y Xbox desde el móvil. Gratis y en tu propio equipo." />
+<meta name="twitter:image" content="https://adrianfilitos.github.io/gamebox/icon-512.png" />
+
+<!-- Datos estructurados -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "GameBox",
+  "operatingSystem": "Windows 10/11 (64 bits)",
+  "applicationCategory": "GameApplication",
+  "applicationSubCategory": "GameLauncher",
+  "softwareVersion": "2.0.0",
+  "url": "https://adrianfilitos.github.io/gamebox/",
+  "downloadUrl": "https://github.com/adrianfilitos/gamebox/releases/latest/download/GameBoxSetup.exe",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "description": "Lanzador y reproductor de juegos en la nube: detecta juegos de Steam, Epic Games y Xbox y los transmite a tu móvil o tablet. Gratis y de código abierto.",
+  "screenshot": "https://adrianfilitos.github.io/gamebox/icon-512.png",
+  "featureList": "Detección automática de juegos, biblioteca con portadas, streaming, mandos, estadísticas, actualizaciones automáticas, PWA",
+  "releaseNotes": "https://github.com/adrianfilitos/gamebox/releases"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Por qué el antivirus o SmartScreen avisa al instalar GameBox?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Porque el instalador no está firmado digitalmente (sin certificado de código). Es una alerta de editor desconocido, no de malware. El código es abierto y se puede auditar en GitHub." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿GameBox es gratis?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí, es 100% gratuito y de código abierto. Todo se instala en tu propio equipo." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Puedo jugar fuera de casa?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí, usando una VPN privada como Tailscale entre tu PC y tu dispositivo." }
+    }
+  ]
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237b5cff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>G</text></svg>" />
 <style>
 :root{
@@ -55,6 +118,15 @@ header.site{
 .hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
 .hero .meta{color:var(--muted);font-size:13px}
 .hero .meta b{color:var(--text)}
+
+.notice{
+  display:flex;gap:14px;text-align:left;margin:26px auto 0;max-width:720px;
+  background:rgba(245,185,66,.07);border:1px solid rgba(245,185,66,.35);border-radius:14px;padding:16px 18px;
+}
+.notice .ic{font-size:26px;flex:0 0 auto}
+.notice h4{font-size:14px;margin-bottom:4px;color:var(--warn,#f5b942)}
+.notice p{font-size:13px;color:var(--muted)}
+.notice a{color:var(--primary2);font-weight:600}
 
 .stores{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:34px 0 0}
 .store{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:14px;font-weight:700}
@@ -145,6 +217,14 @@ footer.site a:hover{color:var(--text)}
     </div>
     <p class="meta">Windows 10/11 · <b>2.0</b> · Instalador de un solo archivo, sin instalación de Node</p>
 
+    <div class="notice">
+      <div class="ic">🛡️</div>
+      <div>
+        <h4>¿Tu antivirus avisa al instalar?</h4>
+        <p>Es normal: el instalador <b>no está firmado digitalmente</b> (sin certificado de firma de código), así que Windows SmartScreen y algunos antivirus muestran "editor desconocido". <b>No es malware.</b> GameBox es de código abierto y puedes auditar todo su código en <a href="https://github.com/adrianfilitos/gamebox" target="_blank" rel="noopener">GitHub</a>.</p>
+      </div>
+    </div>
+
     <div class="mock">
       <div class="phone">
         <div class="screen">
@@ -218,6 +298,7 @@ footer.site a:hover{color:var(--text)}
   <div class="container">
     <h2 class="sec-title">Preguntas frecuentes</h2>
     <div class="faq">
+      <details open><summary>Mi antivirus o SmartScreen avisa al instalar. ¿Es seguro?</summary><p>Sí, es seguro. El instalador no lleva firma de código (un certificado digital de empresa), por eso Windows y algunos antivirus lo marcan como "editor desconocido". Es la <b>falta de firma</b> lo que genera la alerta, no un malware. El proyecto es 100% de código abierto: puedes revisar el código y los binarios en <a href="https://github.com/adrianfilitos/gamebox" target="_blank" rel="noopener">GitHub</a>, y comparar el hash del archivo con el del release oficial.</p></details>
       <details><summary>¿Es gratis?</summary><p>Sí, 100% gratuito y de código abierto. Tú instalas todo en tu propio equipo; no hay servidores de pago ni suscripciones.</p></details>
       <details><summary>¿Necesito instalar Node.js?</summary><p>No. El instalador incluye un Node.js portable dentro del propio GameBox.</p></details>
       <details><summary>¿Puedo jugar fuera de casa?</summary><p>Sí. Conecta una VPN privada como <a href="https://tailscale.com" target="_blank" rel="noopener">Tailscale</a> en tu PC y en tu dispositivo para acceder desde cualquier sitio sin abrir puertos.</p></details>
