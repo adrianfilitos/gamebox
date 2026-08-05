@@ -39,14 +39,15 @@ Dispositivo ──HTTPS──▶ Portal GameBox (Node.js, puerto 4443)
 
 - **En casa**: `https://IP-DEL-PC:4443`
 - **Fuera de casa**: `https://IP-DE-TAILSCALE:4443` (necesita Tailscale)
-- Login, elige un juego en la biblioteca o entra en la **Consola** para transmitir.
+- Abre el portal (sin login), elige un juego en la biblioteca o entra en la **Consola** para transmitir.
 - El PC debe estar encendido y en la sesión de kiosko para jugar de forma aislada.
+- **Mandos**: el mando se conecta al dispositivo desde el que se ve la transmisión (Gamepad API del navegador). El host necesita el driver **ViGEmBus** instalado para que Sunshine inyecte el input en los juegos.
 
 ## Seguridad
 
 - Cuenta kiosko estándar (sin admin) con shell de solo-launcher.
 - Firewall: solo los puertos necesarios (portal 4443, Sunshine 47984/47989/48010 TCP y 47998-48000/48002/48010 UDP, WebRTC 40000-40100 UDP).
-- Portal con contraseña y cookies firmadas; Sunshine con usuario/contraseña y PIN de emparejamiento.
+- Portal sin autenticación (acceso directo); Sunshine con usuario/contraseña y PIN de emparejamiento.
 - Acceso externo solo vía Tailscale (sin abrir puertos en el router).
 - El archivo `config.json` solo es legible por Administradores/SYSTEM.
 
