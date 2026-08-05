@@ -1,0 +1,29 @@
+{
+  "sunshine": {
+    "baseUrl": "https://localhost:47990",
+    "uiUrl": "https://localhost:47990",
+    "username": "TU_USUARIO_SUNSHINE",
+    "password": "TU_PASSWORD_SUNSHINE"
+  },
+  "auth": {
+    "username": "admin",
+    "password": "TU_PASSWORD_PORTAL",
+    "sessionSecret": "GENERA_UNA_CADENA_ALEATORIA_LARGA"
+  },
+  "kiosk": {
+    "username": "GameKiosk",
+    "password": "TU_PASSWORD_KIOSKO"
+  },
+  "moonlight": {
+    "target": "http://127.0.0.1:8080",
+    "pathPrefix": "/ml",
+    "ssl": {
+      "privateKeyPem": "C:\\GameBox\\certs\\key.pem",
+      "certificatePem": "C:\\GameBox\\certs\\cert.pem"
+    },
+    "port": 4443
+  },
+  "games": {
+    "dir": "C:\\GameBox\\portal\\games.json"
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "desktop",
+    "name": "Escritorio",
+    "description": "Transmite el escritorio completo",
+    "command": null
+  },
+  {
+    "id": "steam-bigpicture",
+    "name": "Steam Big Picture",
+    "description": "Modo consola de Steam (requiere Steam instalado)",
+    "command": "steam://open/bigpicture"
+  }
+]

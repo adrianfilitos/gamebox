@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0e14" />
+  <title>GameBox</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237b5cff'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>G</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <section id="login-view" class="login-view hidden">
+      <form id="login-form" class="login-card" autocomplete="off">
+        <div class="logo">GameBox</div>
+        <p class="subtitle">Tu PC, en cualquier dispositivo</p>
+        <label class="field">
+          <span>Usuario</span>
+          <input type="text" id="login-user" autocomplete="username" required />
+        </label>
+        <label class="field">
+          <span>Contraseña</span>
+          <input type="password" id="login-pass" autocomplete="current-password" required />
+        </label>
+        <p id="login-error" class="error hidden"></p>
+        <button type="submit" class="btn primary block">Entrar</button>
+      </form>
+    </section>
+
+    <section id="main-view" class="main-view hidden">
+      <header class="topbar">
+        <div class="brand">GameBox</div>
+        <div class="statusbar">
+          <span class="pill" id="pill-sunshine"><i></i>Streaming</span>
+          <span class="pill" id="pill-moonlight"><i></i>Consola</span>
+          <span class="pill" id="pill-tailscale"><i></i>VPN</span>
+          <span class="pill" id="pill-session"><i></i>Sesión</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="btn-console" class="btn accent">Consola</button>
+          <button id="btn-logout" class="btn ghost" title="Salir">Salir</button>
+        </div>
+      </header>
+
+      <main>
+        <div class="hero">
+          <h1>Tu biblioteca</h1>
+          <p id="subtitle-line">Selecciona un juego para lanzarlo, o abre la consola para transmitir.</p>
+        </div>
+        <div id="games-grid" class="games-grid"></div>
+        <div id="empty-state" class="empty hidden">
+          <p>No se han detectado juegos todavía.</p>
+          <p class="muted">Instala Steam/Epic/Xbox o añade juegos en <code>C:\GameBox\portal\games.json</code>.</p>
+        </div>
+      </main>
+    </section>
+
+    <section id="console-view" class="console-view hidden">
+      <div class="console-bar">
+        <button id="btn-back" class="btn ghost">&larr; Biblioteca</button>
+        <span class="console-title">Consola de streaming</span>
+        <span class="hint">Mando: conéctalo por Bluetooth/USB al dispositivo. Necesitas HTTPS para el mando.</span>
+      </div>
+      <iframe id="console-frame" src="/ml/" title="GameBox Consola" allow="fullscreen; gamepad; keyboard-lock; autoplay; clipboard-write"></iframe>
+    </section>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

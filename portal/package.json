@@ -1,0 +1,14 @@
+{
+  "name": "gamebox-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portal de cloud gaming personal (launcher + streaming)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "http-proxy": "^1.18.1"
+  }
+}
